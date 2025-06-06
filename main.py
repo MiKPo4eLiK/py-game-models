@@ -2,7 +2,6 @@ import json
 
 import init_django_orm  # noqa: F401
 from db.models import Race, Skill, Player, Guild
-from django.utils.timezone import now
 
 
 def main() -> None:
@@ -29,9 +28,10 @@ def main() -> None:
         guild_data = player_data.get("guild")
         guild = None
         if guild_data:
+            guild_description = guild_data.get("description") or ""
             guild, _ = Guild.objects.get_or_create(
                 name=guild_data["name"],
-                defaults={"description": guild_data.get("description", "")}
+                defaults={"description": guild_description}
             )
 
         # Player
@@ -42,7 +42,6 @@ def main() -> None:
                 "bio": player_data["bio"],
                 "race": race,
                 "guild": guild,
-                "created_at": now(),
             }
         )
 
